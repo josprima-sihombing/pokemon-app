@@ -3,15 +3,37 @@
 import { API_ENDPOINT } from "@/constants/common";
 import { useCallback, useEffect, useState } from "react";
 
-type Pokemons = {
+type Pokemon = {
 	url: string;
 	name: string;
-}[];
+};
+
+type Pokemons = ({ id: number } & Pokemon)[];
 
 const PER_PAGE = 10;
 
+/**
+ * Extract the id from the url:
+ * Example:
+ * url => https://pokeapi.co/api/v2/pokemon/1/
+ * id = 1
+ */
+const getIdFromUrl = (url: string) => {
+	const id = url.match(/pokemon\/(\d+)\//)?.[1];
+
+	if (!id) {
+		return null;
+	}
+
+	if (isNaN(Number(id))) {
+		return null;
+	}
+
+	return Number(id);
+};
+
 export default function useGetPokemons() {
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState<Pokemons>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [page, setPage] = useState(1);
@@ -36,8 +58,13 @@ export default function useGetPokemons() {
 				}
 
 				const pokemonsResponse = await response.json();
+				const pokemons = pokemonsResponse.results.map((pokemon: Pokemon) => ({
+					id: getIdFromUrl(pokemon.url),
+					name: pokemon.name,
+					url: pokemon.url,
+				}));
 
-				setData(data?.concat(pokemonsResponse.results));
+				setData(data?.concat(pokemons));
 				setLoading(false);
 			} catch (error) {
 				setError("Unknown Error");
@@ -48,6 +75,7 @@ export default function useGetPokemons() {
 	);
 
 	const fetchNextPage = useCallback(() => {
+		console.log("runnn>??????");
 		setPage((currentPage) => currentPage + 1);
 	}, []);
 

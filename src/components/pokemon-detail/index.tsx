@@ -8,6 +8,7 @@ import css from "./pokemon-detail.module.css";
 import PokeBallIcon from "../icons/poke-ball";
 import { useRouter } from "next/navigation";
 import useMyPokemon from "@/hooks/use-my-pokemon";
+import Field from "./field";
 
 type PokemonDetailProps = {
 	id: number;
@@ -103,7 +104,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 						"h-full bg-slate-800 rounded-t-3xl pt-8 flex flex-col",
 					)}
 				>
-					<div className="flex-grow relative">
+					<div className="flex-grow min-h-0 relative pt-[160px] flex flex-col">
 						<div className="w-[240px] h-[240px] absolute top-[-90px] left-1/2 -translate-x-1/2">
 							<img
 								src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
@@ -114,10 +115,48 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 								loading="lazy"
 							/>
 						</div>
+
+						<div className="flex-grow px-4 h-full flex flex-col overflow-auto">
+							<h2 className="text-center text-white uppercase text-2xl border-b border-white pb-2 mb-2">
+								{data?.name}
+							</h2>
+
+							<div>
+								<div className="flex gap-4 px-2 py-4">
+									<Field name="Weight" value={data?.weight.toString() || "-"} />
+									<Field name="Height" value={data?.height.toString() || "-"} />
+								</div>
+
+								<div className="grid grid-cols-2 gap-2 px-2 py-4">
+									{data?.stats.map((stat, index) => (
+										<div key={index} className="flex flex-col">
+											<label
+												htmlFor={stat.stat.name}
+												className="text-white text-sm font-bold"
+											>
+												{stat.stat.name}
+											</label>
+											<meter
+												id={stat.stat.name}
+												value={stat.base_stat}
+												min="0"
+												max="100"
+											>
+												{stat.base_stat}
+											</meter>
+										</div>
+									))}
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div className="flex gap-4 p-4 justify-end">
-						<button type="button" onClick={() => router.back()}>
+						<button
+							type="button"
+							onClick={() => router.back()}
+							className="text-white border px-4 rounded-lg"
+						>
 							Back
 						</button>
 

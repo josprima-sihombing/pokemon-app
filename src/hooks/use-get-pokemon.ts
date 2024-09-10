@@ -5,6 +5,21 @@ import { useCallback, useEffect, useState } from "react";
 
 type Pokemon = {
 	name: string;
+	height: number;
+	weight: number;
+	stats: {
+		base_stat: number;
+		effort: number;
+		stat: {
+			name: string;
+		};
+	}[];
+	abilities: {
+		ability: {
+			name: "blaze";
+		};
+		is_hidden: boolean;
+	}[];
 };
 
 export default function useGetPokemon(id: number) {

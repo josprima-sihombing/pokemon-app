@@ -1,3 +1,5 @@
+"use client";
+
 import useGetPokemon from "@/hooks/use-get-pokemon";
 import classNames from "classnames";
 import { type FormEventHandler, useEffect, useState } from "react";
@@ -5,17 +7,19 @@ import { type FormEventHandler, useEffect, useState } from "react";
 import css from "./pokemon-detail.module.css";
 import PokeBallIcon from "../icons/poke-ball";
 import { POKEMON_STORAGE_KEY } from "@/constants/common";
+import { useRouter } from "next/navigation";
 
 type PokemonDetailProps = {
 	id: number;
-	onClose: () => void;
 };
 
-export default function PokemonDetail({ id, onClose }: PokemonDetailProps) {
+export default function PokemonDetail({ id }: PokemonDetailProps) {
 	const { data, error, loading } = useGetPokemon(id);
 	const [isCatching, setIsCatching] = useState(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [nickName, setNickName] = useState("");
+
+	const router = useRouter();
 
 	useEffect(() => {
 		document.body.style.overflow = "hidden";
@@ -43,7 +47,7 @@ export default function PokemonDetail({ id, onClose }: PokemonDetailProps) {
 			);
 		}
 
-		onClose();
+		router.back();
 	};
 
 	const catchPokemon = () => {
@@ -95,8 +99,8 @@ export default function PokemonDetail({ id, onClose }: PokemonDetailProps) {
 					Battle area with ball animation
 					{renderResult()}
 					<div className="flex gap-4 p-4 mt-auto justify-center">
-						<button type="button" onClick={onClose}>
-							Close
+						<button type="button" onClick={() => router.back()}>
+							Back
 						</button>
 					</div>
 				</div>
@@ -121,8 +125,8 @@ export default function PokemonDetail({ id, onClose }: PokemonDetailProps) {
 					</div>
 
 					<div className="flex gap-4 p-4 justify-end">
-						<button type="button" onClick={onClose}>
-							Close
+						<button type="button" onClick={() => router.back()}>
+							Back
 						</button>
 
 						<button

@@ -7,7 +7,6 @@ import PokemonCard from "./card";
 
 export default function PokemonList() {
 	const { data, loading, fetchNextPage } = useGetPokemons();
-	const [selectedId, setSelectedId] = useState<number | null>(null);
 	const [observerTarget, setObserverTarget] = useState<HTMLDivElement | null>(
 		null,
 	);
@@ -45,22 +44,11 @@ export default function PokemonList() {
 		<>
 			<div className="grid grid-cols-2 gap-12 max-w-screen-md mx-auto">
 				{data?.map((pokemon) => (
-					<PokemonCard
-						key={pokemon.id}
-						id={pokemon.id}
-						name={pokemon.name}
-						onClick={() => {
-							setSelectedId(pokemon.id);
-						}}
-					/>
+					<PokemonCard key={pokemon.id} id={pokemon.id} name={pokemon.name} />
 				))}
 
 				{!loading && <div ref={onObserverTargetRefChange} />}
 			</div>
-
-			{selectedId && (
-				<PokemonDetail id={selectedId} onClose={() => setSelectedId(null)} />
-			)}
 		</>
 	);
 }

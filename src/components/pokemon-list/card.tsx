@@ -8,6 +8,8 @@ type PokemonCardProps = {
 	actionButton?: React.ReactNode;
 };
 
+const imagePlaceholder = "/images/placeholder.svg";
+
 export default function PokemonCard({
 	id,
 	name,
@@ -30,14 +32,17 @@ export default function PokemonCard({
 
 				const imageSrc = entry.target.getAttribute("src") || "";
 
-				if (imageSrc) {
+				if (imageSrc !== imagePlaceholder) {
 					return;
 				}
 
-				entry.target.setAttribute(
-					"src",
-					entry.target.getAttribute("data-src") || "",
-				);
+				const image = new Image();
+
+				image.src = entry.target.getAttribute("data-src") || "";
+
+				image.onload = () => {
+					entry.target.setAttribute("src", image.src);
+				};
 			}
 		}, {});
 
@@ -57,6 +62,7 @@ export default function PokemonCard({
 			<button type="button" onClick={() => router.push(`/${id}`)}>
 				<div className="w-[140px] h-[200px] mx-auto">
 					<img
+						src={imagePlaceholder}
 						data-src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
 						alt=""
 						className="w-full h-full object-contain"

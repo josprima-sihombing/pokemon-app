@@ -2,7 +2,6 @@
 
 import useGetPokemons from "@/hooks/use-get-pokemons";
 import { useCallback, useEffect, useState } from "react";
-import PokemonDetail from "@/components/pokemon-detail";
 import PokemonCard from "./card";
 
 export default function PokemonList() {
@@ -49,6 +48,12 @@ export default function PokemonList() {
 
 				{!loading && <div ref={onObserverTargetRefChange} />}
 			</div>
+
+			{loading && (
+				<div className="text-center text-white p-4">
+					<span>Loading...</span>
+				</div>
+			)}
 		</>
 	);
 }

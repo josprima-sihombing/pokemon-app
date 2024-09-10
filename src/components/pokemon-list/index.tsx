@@ -42,7 +42,7 @@ export default function PokemonList() {
 
 	return (
 		<>
-			<div className="grid grid-cols-2 gap-12 max-w-screen-md mx-auto">
+			<div className="grid grid-cols-2 gap-4 max-w-screen-md mx-auto">
 				{data?.map((pokemon) => (
 					<PokemonCard key={pokemon.id} id={pokemon.id} name={pokemon.name} />
 				))}

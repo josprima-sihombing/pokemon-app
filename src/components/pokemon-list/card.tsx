@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 type PokemonCardProps = {
 	id: number;
@@ -14,15 +15,52 @@ export default function PokemonCard({
 	actionButton = null,
 }: PokemonCardProps) {
 	const router = useRouter();
+	const imageRef = useRef<HTMLImageElement>(null);
+
+	useEffect(() => {
+		if (!imageRef.current) {
+			return;
+		}
+
+		const observer = new IntersectionObserver((entries) => {
+			for (const entry of entries) {
+				if (!entry.isIntersecting) {
+					return;
+				}
+
+				const imageSrc = entry.target.getAttribute("src") || "";
+
+				if (imageSrc) {
+					return;
+				}
+
+				entry.target.setAttribute(
+					"src",
+					entry.target.getAttribute("data-src") || "",
+				);
+			}
+		}, {});
+
+		observer.observe(imageRef.current);
+
+		return () => {
+			if (!imageRef.current) {
+				return;
+			}
+
+			observer.unobserve(imageRef.current);
+		};
+	}, []);
 
 	return (
-		<div className="rounded-lg flex flex-col">
+		<div className="rounded-lg flex flex-col bg-slate-700">
 			<button type="button" onClick={() => router.push(`/${id}`)}>
 				<div className="w-[140px] h-[200px] mx-auto">
 					<img
-						src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
+						data-src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
 						alt=""
 						className="w-full h-full object-contain"
+						ref={imageRef}
 					/>
 				</div>
 

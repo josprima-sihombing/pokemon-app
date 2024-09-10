@@ -62,20 +62,51 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 
 		if (isSuccess) {
 			return (
-				<form onSubmit={addToLocalStorage}>
-					<input
-						type="text"
-						value={nickName}
-						onChange={(e) => setNickName(e.target.value)}
+				<div>
+					<img
+						src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
+						alt=""
+						className="w-[100px] h-[120px] object-contain block mx-auto mb-4"
 					/>
-					<button type="submit">Save</button>
-				</form>
+
+					<p className="text-center text-2xl bg-green-500 text-white rounded-md p-4 mb-4">
+						Success!
+					</p>
+
+					<form onSubmit={addToLocalStorage}>
+						<div className="flex flex-col gap-2 mb-4">
+							<label htmlFor="nickname" className="text-white">
+								Nickname:
+							</label>
+							<input
+								id="nickname"
+								type="text"
+								value={nickName}
+								onChange={(e) => setNickName(e.target.value)}
+								className="px-4 py-2"
+								placeholder="Your Pokemon Nickname"
+							/>
+						</div>
+						<div className="flex justify-end">
+							<button type="submit" className={css.catchButton}>
+								Save
+							</button>
+						</div>
+					</form>
+				</div>
 			);
 		}
 
 		return (
 			<div>
-				<p>Failed</p>
+				<img
+					src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
+					alt=""
+					className="w-[100px] h-[120px] object-contain block mx-auto grayscale mb-4"
+				/>
+				<p className="text-center text-2xl bg-red-500 text-white rounded-md p-4 mb-4">
+					Failed!
+				</p>
 			</div>
 		);
 	};
@@ -89,10 +120,13 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 						"h-full bg-slate-800 rounded-t-3xl pt-8 flex flex-col",
 					)}
 				>
-					Battle area with ball animation
-					{renderResult()}
+					<div className="p-4">{renderResult()}</div>
 					<div className="flex gap-4 p-4 mt-auto justify-center">
-						<button type="button" onClick={() => router.back()}>
+						<button
+							type="button"
+							onClick={() => router.back()}
+							className="text-white border px-4 py-2 rounded-lg"
+						>
 							Back
 						</button>
 					</div>

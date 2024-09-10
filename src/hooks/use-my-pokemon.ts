@@ -1,5 +1,5 @@
 import { POKEMON_STORAGE_KEY } from "@/constants/common";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type SavedPokemon = {
 	id: number;
@@ -32,8 +32,9 @@ const getSavedPokemons = (): SavedPokemon[] => {
 };
 
 export default function useMyPokemon() {
-	const [savedPokemons, setSavedPokemons] =
-		useState<SavedPokemon[]>(getSavedPokemons);
+	const [loading, setLoading] = useState(true);
+
+	const [savedPokemons, setSavedPokemons] = useState<SavedPokemon[]>([]);
 
 	const saveToLocalStorage = useCallback((pokemons: SavedPokemon[]) => {
 		const items = pokemons.map(
@@ -57,9 +58,16 @@ export default function useMyPokemon() {
 		saveToLocalStorage(newSavedPokemons);
 	};
 
+	useEffect(() => {
+		const savedPokemons = getSavedPokemons();
+		setSavedPokemons(savedPokemons);
+		setLoading(false);
+	}, []);
+
 	return {
 		savedPokemons,
 		releasePokemon,
 		addPokemon,
+		loading,
 	};
 }

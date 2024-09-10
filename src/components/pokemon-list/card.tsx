@@ -58,9 +58,9 @@ export default function PokemonCard({
 	}, []);
 
 	return (
-		<div className="rounded-lg flex flex-col bg-slate-700">
+		<div className="rounded-lg flex flex-col bg-slate-700 p-4">
 			<button type="button" onClick={() => router.push(`/${id}`)}>
-				<div className="w-[140px] h-[200px] mx-auto">
+				<div className="w-[140px] h-[200px] max-w-full mx-auto">
 					<img
 						src={imagePlaceholder}
 						data-src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
@@ -73,9 +73,7 @@ export default function PokemonCard({
 				<div className="px-2 py-4">
 					<span className="uppercase text-white block text-center">{name}</span>
 					{nickName && (
-						<span className="uppercase text-white block text-center">
-							{nickName}
-						</span>
+						<span className="text-white block text-center">{`(${nickName})`}</span>
 					)}
 				</div>
 			</button>

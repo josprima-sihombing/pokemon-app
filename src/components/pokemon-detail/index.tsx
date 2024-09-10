@@ -14,12 +14,15 @@ type PokemonDetailProps = {
 	id: number;
 };
 
+const validNickNameRegex = /[^,;]{3,}$/;
+
 export default function PokemonDetail({ id }: PokemonDetailProps) {
 	const { data } = useGetPokemon(id);
-	const { addPokemon } = useMyPokemon();
+	const { addPokemon, savedPokemons, loading } = useMyPokemon();
 	const [isCatching, setIsCatching] = useState(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [nickName, setNickName] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const router = useRouter();
 
@@ -33,6 +36,24 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 
 	const addToLocalStorage: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
+
+		setErrorMessage("");
+
+		// validate pokemon name
+		if (!validNickNameRegex.test(nickName)) {
+			setErrorMessage(
+				"Nickname required, Min 3 characters and should not contains comma (,) or semicolon (;)",
+			);
+
+			return;
+		}
+
+		const samePokemon = savedPokemons.find((pokemon) => pokemon.id === id);
+
+		if (samePokemon && samePokemon.nickName === nickName) {
+			setErrorMessage(`Choose different nickname for ${data?.name}`);
+			return;
+		}
 
 		addPokemon({
 			id,
@@ -85,15 +106,18 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 								onChange={(e) => setNickName(e.target.value)}
 								className="px-4 py-2 peer"
 								placeholder="Your Pokemon Nickname"
-								pattern="[^,;]{0,}"
 							/>
-							<p className="invisible peer-invalid:visible text-red-500 text-sm">
-								Nickname required and should not contain comma(,) or
-								semicolon(;)
-							</p>
+
+							{errorMessage && (
+								<p className="text-sm text-red-500">{errorMessage}</p>
+							)}
 						</div>
 						<div className="flex justify-end">
-							<button type="submit" className={css.catchButton}>
+							<button
+								type="submit"
+								className={css.catchButton}
+								disabled={loading}
+							>
 								Save
 							</button>
 						</div>

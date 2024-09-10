@@ -1,55 +1,10 @@
 "use client";
 
 import PokemonCard from "@/components/pokemon-list/card";
-import { POKEMON_STORAGE_KEY } from "@/constants/common";
-import { useState } from "react";
-
-type SavedPokemons = {
-	id: number;
-	name: string;
-	nickName: string;
-}[];
-
-const getSavedPokemons = (): SavedPokemons => {
-	const savedPokemons = localStorage.getItem(POKEMON_STORAGE_KEY);
-
-	if (!savedPokemons) {
-		return [];
-	}
-
-	const items = savedPokemons.split(";");
-
-	return items.map((item) => {
-		const data = item.split(",");
-
-		return {
-			id: Number(data[0]),
-			name: data[1],
-			nickName: data[2],
-		};
-	});
-};
+import useMyPokemon from "@/hooks/use-my-pokemon";
 
 export default function MyPokemonPage() {
-	const [savedPokemons, setSavedPokemons] =
-		useState<SavedPokemons>(getSavedPokemons);
-
-	const saveToLocalStorage = (pokemons: SavedPokemons) => {
-		const items = pokemons.map(
-			(pokemon) => `${pokemon.id},${pokemon.name},${pokemon.nickName}`,
-		);
-
-		localStorage.setItem(POKEMON_STORAGE_KEY, items.join(";"));
-	};
-
-	const releasePokemon = (selectedIndex: number) => {
-		const newSavedPokemons = [...savedPokemons].filter(
-			(_, index) => index !== selectedIndex,
-		);
-
-		setSavedPokemons(newSavedPokemons);
-		saveToLocalStorage(newSavedPokemons);
-	};
+	const { savedPokemons, releasePokemon } = useMyPokemon();
 
 	const renderData = () => {
 		if (savedPokemons.length === 0) {

@@ -6,8 +6,8 @@ import { type FormEventHandler, useEffect, useState } from "react";
 
 import css from "./pokemon-detail.module.css";
 import PokeBallIcon from "../icons/poke-ball";
-import { POKEMON_STORAGE_KEY } from "@/constants/common";
 import { useRouter } from "next/navigation";
+import useMyPokemon from "@/hooks/use-my-pokemon";
 
 type PokemonDetailProps = {
 	id: number;
@@ -15,6 +15,7 @@ type PokemonDetailProps = {
 
 export default function PokemonDetail({ id }: PokemonDetailProps) {
 	const { data, error, loading } = useGetPokemon(id);
+	const { addPokemon } = useMyPokemon();
 	const [isCatching, setIsCatching] = useState(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [nickName, setNickName] = useState("");
@@ -32,20 +33,11 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 	const addToLocalStorage: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
 
-		const current = localStorage.getItem(POKEMON_STORAGE_KEY);
-
-		if (!current) {
-			localStorage.setItem(
-				POKEMON_STORAGE_KEY,
-				`${id},${data?.name},${nickName}`,
-			);
-		} else {
-			// Append to previously saved separate by ;
-			localStorage.setItem(
-				POKEMON_STORAGE_KEY,
-				`${current};${id},${data?.name},${nickName}`,
-			);
-		}
+		addPokemon({
+			id,
+			name: data?.name || "",
+			nickName: nickName,
+		});
 
 		router.back();
 	};

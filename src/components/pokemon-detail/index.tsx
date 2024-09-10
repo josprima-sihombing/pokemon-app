@@ -15,7 +15,7 @@ type PokemonDetailProps = {
 };
 
 export default function PokemonDetail({ id }: PokemonDetailProps) {
-	const { data, error, loading } = useGetPokemon(id);
+	const { data } = useGetPokemon(id);
 	const { addPokemon } = useMyPokemon();
 	const [isCatching, setIsCatching] = useState(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -40,7 +40,7 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 			nickName: nickName,
 		});
 
-		router.back();
+		router.replace("/");
 	};
 
 	const catchPokemon = () => {
@@ -83,9 +83,14 @@ export default function PokemonDetail({ id }: PokemonDetailProps) {
 								type="text"
 								value={nickName}
 								onChange={(e) => setNickName(e.target.value)}
-								className="px-4 py-2"
+								className="px-4 py-2 peer"
 								placeholder="Your Pokemon Nickname"
+								pattern="[^,;]{0,}"
 							/>
+							<p className="invisible peer-invalid:visible text-red-500 text-sm">
+								Nickname required and should not contain comma(,) or
+								semicolon(;)
+							</p>
 						</div>
 						<div className="flex justify-end">
 							<button type="submit" className={css.catchButton}>

@@ -16,7 +16,7 @@ const PER_PAGE = 10;
  * Extract the id from the url:
  * Example:
  * url => https://pokeapi.co/api/v2/pokemon/1/
- * id = 1
+ * return id = 1
  */
 const getIdFromUrl = (url: string) => {
 	const id = url.match(/pokemon\/(\d+)\//)?.[1];
@@ -75,7 +75,6 @@ export default function useGetPokemons() {
 	);
 
 	const fetchNextPage = useCallback(() => {
-		console.log("runnn>??????");
 		setPage((currentPage) => currentPage + 1);
 	}, []);
 
